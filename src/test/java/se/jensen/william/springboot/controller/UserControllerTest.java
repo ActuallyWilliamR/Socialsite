@@ -59,7 +59,6 @@ public class UserControllerTest {
         userRepository.save(user);
     }
 
-    @Disabled
     @Test
     void shouldGetMyProfile() throws Exception{
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users/my-profile")

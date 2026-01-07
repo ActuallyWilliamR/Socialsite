@@ -54,7 +54,6 @@ public class AdminControllerTest {
         userRepository.save(user);
     }
 
-    @Disabled
     @Test
     void shouldGetAllUsers() throws Exception{
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/admin/all-users")
