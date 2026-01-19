@@ -2,11 +2,15 @@ package se.jensen.william.springboot.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import se.jensen.william.springboot.dto.*;
+import se.jensen.william.springboot.dto.PostResponseDTO;
+import se.jensen.william.springboot.dto.UserRequestDTO;
+import se.jensen.william.springboot.dto.UserResponseDTO;
+import se.jensen.william.springboot.dto.UserWithPostsResponseDto;
+import se.jensen.william.springboot.entities.User;
 import se.jensen.william.springboot.exceptions.UserAlreadyExistException;
 import se.jensen.william.springboot.exceptions.UserNotFoundException;
+import se.jensen.william.springboot.mapper.PostMapper;
 import se.jensen.william.springboot.mapper.UserMapper;
-import se.jensen.william.springboot.entities.User;
 import se.jensen.william.springboot.repository.UserRepository;
 
 import java.util.List;
@@ -33,7 +37,7 @@ public class UserService {
 
         // KOLLAR OM USER REDAN FINNS
         boolean exists = userRepository.existsByUsernameOrEmail(user.getUsername(), user.getEmail());
-        if (exists){
+        if (exists) {
             throw new UserAlreadyExistException(user.getUsername(), user.getEmail());
         }
 
@@ -45,7 +49,7 @@ public class UserService {
     }
 
     // HÄMTAR USERS FRÅN DB, LÄGGER I LISTA, SKICKAR TILLBAKA EN MAPPNING TILL RESPONSEDTO
-    public List<UserResponseDTO> getAllUsers(){
+    public List<UserResponseDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream().map(userMapper::toDto).toList(); // Method Reference
     }
@@ -65,17 +69,17 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
-    public UserWithPostsResponseDto getUserWithPosts(Long id){
+    public UserWithPostsResponseDto getUserWithPosts(Long id) {
         User user = userRepository.findUserWithPosts(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
+        /**
+         *  Mappar användarens posts till PostResponseDTO med hjälp av PostMapper
+         *  Linus
+         */
         List<PostResponseDTO> posts = user.getPosts()
                 .stream()
-                .map(p -> new PostResponseDTO(
-                        p.getId(),
-                        p.getText(),
-                        p.getCreatedAt()
-                ))
+                .map(PostMapper::toDto)
                 .toList();
 
         UserResponseDTO dto = userMapper.toDto(user);
@@ -84,13 +88,13 @@ public class UserService {
     }
 
     // UPPDATERAR EXISTERANDE USER
-    public UserResponseDTO updateUser(Long id, UserRequestDTO userDto){
+    public UserResponseDTO updateUser(Long id, UserRequestDTO userDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         userMapper.fromDto(user, userDto);
 
-        if(userDto.password() != null && !userDto.password().isBlank()) {
+        if (userDto.password() != null && !userDto.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(userDto.password()));
         }
 
@@ -99,13 +103,12 @@ public class UserService {
     }
 
     // TAR BORT USER FRÅN DATABASEN
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
         Optional<User> user = userRepository.findById(id);
 
-        if (user.isPresent()){
+        if (user.isPresent()) {
             userRepository.deleteById(id);
-        }
-        else {
+        } else {
             throw new UserNotFoundException(id);
         }
     }
