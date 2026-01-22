@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * Service-klass för hantering av användare.
  * Klassen innehåller logik för användrar relletarande opretationer.
- * Hanterar skappande, uppdatering och borttagning och hämntning av användare.
+ * Hanterar skappande, uppdatering och borttagning och hämntning av användaren.
  *
  * @author William
  * @author Fadime
