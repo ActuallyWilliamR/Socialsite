@@ -1,7 +1,7 @@
 package se.jensen.william.springboot.exceptions;
 
-public class FriendRequestAlreadyExsistsException extends RuntimeException {
-    public FriendRequestAlreadyExsistsException(String message) {
+public class FriendRequestAlreadyExistsException extends RuntimeException {
+    public FriendRequestAlreadyExistsException(String message) {
         super(message);
     }
 }

@@ -1,7 +1,7 @@
 package se.jensen.william.springboot.exceptions;
 
 public class FriendshipNotFoundException extends RuntimeException {
-  public FriendshipNotFoundException(String message) {
-    super(message);
-  }
+    public FriendshipNotFoundException(Long friendshipId) {
+        super("No such friendship...");
+    }
 }
