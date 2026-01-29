@@ -14,6 +14,12 @@ import se.jensen.william.springboot.repository.UserRepository;
 
 import java.util.List;
 
+/**
+ * Service-klass för hantering av friendship affärslogik.
+ *
+ * @author William
+ */
+
 @Service
 public class FriendshipService {
     private final UserRepository userRepository;
